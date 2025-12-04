@@ -249,21 +249,31 @@ function bootstrap() {
     return base;
   }
   function buildHeader() {
-    const razon = st.empresa.razon.value||"";
-    const profesional = st.empresa.profesional.value||"";
-    const fechaStr = formatDateLong(st.fecha.value);
-    return `
-      <div class="flex items-start justify-between border-b pb-4 avoid-break">
-        <div class="h-16 w-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold border border-amber-300">LOGO</div>
-        <div class="flex-1 text-center">
-          <div class="text-3xl md:text-4xl font-extrabold tracking-wide" style="color:#F2C94C">${razon.toUpperCase()}</div>
-        </div>
-        <div class="text-right text-sm">
-          ${profesional ? `<div class="italic text-gray-700">${profesional}</div>` : ""}
-          <div class="text-gray-600">${fechaStr}</div>
-        </div>
-      </div>`;
-  }
+  const razon = st.empresa.razon.value || "";
+  const profesional = st.empresa.profesional.value || "";
+  const fechaStr = formatDateLong(st.fecha.value);
+  const logoUrl = st.empresa.logo.value || "LOGO.jpg";
+
+  const logoHTML = logoUrl
+    ? `<img src="${logoUrl}" alt="Logo" class="h-16 w-16 object-cover rounded-full ring-2 ring-amber-300 border border-amber-300">`
+    : `<div class="h-16 w-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold border border-amber-300">LOGO</div>`;
+
+  return `
+    <div class="flex items-start justify-between border-b pb-4 avoid-break">
+      <div class="flex items-center gap-4">
+        ${logoHTML}
+      </div>
+      <div class="flex-1 text-center">
+        <div class="text-3xl md:text-4xl font-extrabold tracking-wide" style="color:#F2C94C">${razon.toUpperCase()}</div>
+      </div>
+      <div class="text-right text-sm">
+        ${profesional ? `<div class="italic text-gray-700">${profesional}</div>` : ""}
+        <div class="text-gray-600">${fechaStr}</div>
+      </div>
+    </div>
+  `;
+}
+
   function updateAll(){
     const base = parseFloat(String(st.monto.value).replace(/,/g,".")) || 0;
     st.montoHint.textContent = `Se mostrará como ${money(base, st.moneda.value)}`;
@@ -431,3 +441,4 @@ async function descargarPDF() {
     alert("✅ Cotización guardada en historial (Tablero).");
   }
 }
+

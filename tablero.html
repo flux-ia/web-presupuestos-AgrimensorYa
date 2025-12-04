@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="es" class="dark:[color-scheme:dark]">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tablero — Presupuestos (Colorful v3)</title>
+  <script>
+    // Tailwind on CDN + dark mode by class
+    tailwind = { config: { darkMode: 'class' } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --ink: 15, 23, 42;      /* slate-900 */
+      --brandA: 245, 158, 11; /* amber-500 */
+      --brandB: 59, 130, 246; /* blue-500  */
+      --brandC: 16, 185, 129; /* emerald-500 */
+      --brandD: 236, 72, 153; /* pink-500 */
+    }
+    body{
+      background:
+        radial-gradient(900px 400px at 10% -5%, rgba(var(--brandB), .12), transparent 50%),
+        radial-gradient(900px 400px at 90% 105%, rgba(var(--brandA), .12), transparent 50%),
+        linear-gradient(180deg, #fff7ed 0%, #eff6ff 50%, #f0fdf4 100%);
+    }
+    .dark body{
+      background:
+        radial-gradient(900px 400px at 10% -5%, rgba(var(--brandB), .12), transparent 50%),
+        radial-gradient(900px 400px at 90% 105%, rgba(var(--brandA), .12), transparent 50%),
+        linear-gradient(180deg, #0b1220 0%, #0b1220 50%, #0b1220 100%);
+    }
+    .glass{ backdrop-filter: blur(10px); background: rgba(255,255,255,.7); }
+    .dark .glass{ background: rgba(2,6,23,.6); }
+    .chip{ padding:.35rem .7rem; border-radius:9999px; font-size:.8rem; }
+    .kpi-gradient-1{ background: linear-gradient(135deg, rgba(var(--brandB),.12), rgba(var(--brandA),.12)); }
+    .kpi-gradient-2{ background: linear-gradient(135deg, rgba(var(--brandC),.12), rgba(var(--brandD),.12)); }
+    .kpi-gradient-3{ background: linear-gradient(135deg, rgba(244,63,94,.12), rgba(var(--brandC),.12)); }
+    .kpi-gradient-4{ background: linear-gradient(135deg, rgba(168,85,247,.12), rgba(234,179,8,.12)); }
+    .table-elegant thead tr{ background: linear-gradient(90deg, rgba(2,6,23,.04), rgba(2,6,23,.02)); }
+    .dark .table-elegant thead tr{ background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); }
+    .table-elegant tbody tr:nth-child(odd){ background: rgba(2,6,23,.02); }
+    .dark .table-elegant tbody tr:nth-child(odd){ background: rgba(255,255,255,.03); }
+    /* Full-bleed helper to stretch to full viewport width */
+    .full-bleed{ width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 dark:text-slate-100">
+  <!-- NAV -->
+  <header class="sticky top-0 z-30 border-b border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 glass">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl" style="background:conic-gradient(from 160deg, #2563eb, #0ea5e9, #14b8a6, #94a3b8, #2563eb)"></div>
+        <div class="font-semibold">Tablero de Presupuestos</div>
+        <span id="periodoTag" class="chip bg-slate-900/90 text-white ml-2 dark:bg-white/90 dark:text-slate-900">Mes actual</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnSemana" class="chip bg-white/80 hover:bg-white text-slate-700 border dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700">Semana</button>
+        <button id="btnMes" class="chip bg-slate-900 text-white dark:bg-white dark:text-slate-900">Mes</button>
+        <button id="btnPalette" class="chip bg-white/80 text-slate-700 border dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700" title="Cambiar paleta">🎨</button>
+        <button id="btnTheme" class="chip bg-white/80 text-slate-700 border dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700" title="Modo oscuro">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- KPIs -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="rounded-2xl border border-slate-200 dark:border-slate-800 glass kpi-gradient-1 p-4 shadow-sm">
+        <div class="text-sm text-slate-600 dark:text-slate-300">Total Cotizado</div>
+        <div id="kpiTotal" class="text-3xl font-extrabold tracking-tight mt-1">—</div>
+        <div class="text-xs text-slate-600 dark:text-slate-400 mt-1">Suma de montos en el período</div>
+      </div>
+      <div class="rounded-2xl border border-slate-200 dark:border-slate-800 glass kpi-gradient-2 p-4 shadow-sm">
+        <div class="text-sm text-slate-600 dark:text-slate-300">Presupuestos</div>
+        <div id="kpiCant" class="text-3xl font-extrabold tracking-tight mt-1">—</div>
+        <div class="text-xs text-slate-600 dark:text-slate-400 mt-1">Cantidad en el período</div>
+      </div>
+      <div class="rounded-2xl border border-slate-200 dark:border-slate-800 glass kpi-gradient-3 p-4 shadow-sm">
+        <div class="text-sm text-slate-600 dark:text-slate-300">Ticket Promedio</div>
+        <div id="kpiAvg" class="text-3xl font-extrabold tracking-tight mt-1">—</div>
+        <div class="text-xs text-slate-600 dark:text-slate-400 mt-1">Promedio por presupuesto</div>
+      </div>
+      <div class="rounded-2xl border border-slate-200 dark:border-slate-800 glass kpi-gradient-4 p-4 shadow-sm">
+        <div class="text-sm text-slate-600 dark:text-slate-300">Aprobados</div>
+        <div id="kpiAprobMonto" class="text-3xl font-extrabold tracking-tight mt-1">—</div>
+        <div id="kpiAprobTxt" class="text-xs text-slate-600 dark:text-slate-400 mt-1">Aprobados (—)</div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Ranking de trabajos (por CANTIDAD) -->
+      <div class="bg-white/70 dark:bg-slate-900/70 glass rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm col-span-2">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-base font-semibold">Ranking de Trabajos</h3>
+          <div class="chip bg-blue-500/10 text-blue-700 border border-blue-200 dark:text-blue-300 dark:border-blue-900/50">por cantidad</div>
+        </div>
+        <canvas id="chartTipos" height="210"></canvas>
+      </div>
+
+      <!-- Distribución por monto (dona) -->
+      <div class="bg-white/70 dark:bg-slate-900/70 glass rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-base font-semibold">Distribución por Monto</h3>
+          <div class="chip bg-emerald-500/10 text-emerald-700 border border-emerald-200 dark:text-emerald-300 dark:border-emerald-900/50">% del total</div>
+        </div>
+        <canvas id="chartDona" height="210"></canvas>
+      </div>
+
+      <!-- Top ubicaciones -->
+      <div class="bg-white/70 dark:bg-slate-900/70 glass rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm lg:col-span-1">
+        <h3 class="text-base font-semibold mb-3">Top Ubicaciones</h3>
+        <ul id="topUbic" class="space-y-2 text-sm"></ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- FULL-WIDTH: Últimos registros -->
+  <section class="full-bleed px-4 sm:px-6 pb-10">
+    <div class="bg-white/70 dark:bg-slate-900/70 glass rounded-none sm:rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-sm">
+      <div class="max-w-6xl mx-auto flex items-center justify-between mb-2">
+        <h3 class="text-base font-semibold">Últimos presupuestos guardados</h3>
+        <div class="flex items-center gap-2">
+          <button id="btnImport" class="chip bg-white/80 text-slate-700 border dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700">Importar</button>
+          <button id="btnExport" class="chip bg-white/80 text-slate-700 border dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700">Exportar CSV</button>
+          <a href="index.html" class="chip bg-slate-900 text-white dark:bg-white dark:text-slate-900">+ Nuevo</a>
+        </div>
+      </div>
+      <input id="fileJSON" type="file" accept=".json,.csv" class="hidden" />
+      <div class="max-w-6xl mx-auto overflow-x-auto">
+        <div class="max-h-[70vh] overflow-y-auto">
+        <table class="min-w-full text-sm table-elegant">
+          <thead>
+            <tr class="text-left text-slate-600 dark:text-slate-300 border-b border-slate-200/60 dark:border-slate-800">
+              <th class="py-2 pr-4">Fecha</th>
+              <th class="py-2 pr-4">Comitente</th>
+              <th class="py-2 pr-4">Tipo</th>
+              <th class="py-2 pr-4">Ubicación</th>
+              <th class="py-2 pr-4 text-right">Monto</th>
+              <th class="py-2 pr-2 text-center">Aprobado</th>
+              <th class="py-2 pr-2 text-center">Quitar</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyRows"></tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ========= Helpers =========
+    const money = (n)=> new Intl.NumberFormat('es-AR',{ style:'currency', currency:'ARS', maximumFractionDigits:0}).format(n||0);
+    const parse = (x,i)=> ({ ...x, fecha: new Date(x.fecha), aprobado: x.aprobado ?? false, _id: x._id || `${x.fecha}|${x.comitente}|${x.tipo}|${x.ubicacion}|${x.monto}|${i}` });
+
+    // Paletas de color (alternables)
+    const palettes = [
+      // Vibrante pastel (anterior)
+      ['#60a5fa','#f59e0b','#10b981','#ec4899','#a78bfa','#f472b6','#22d3ee','#f97316','#84cc16'],
+      // Alternativa saturada (anterior)
+      ['#0ea5e9','#eab308','#22c55e','#fb7185','#8b5cf6','#f59e0b','#06b6d4','#f43f5e','#65a30d'],
+      // **Azul Elegante** (nuevo por defecto): azules y acentos sobrios
+      ['#1e40af','#2563eb','#0ea5e9','#0891b2','#14b8a6','#64748b','#94a3b8','#fbbf24','#0f766e']
+    ];
+    const defaultPaletteIndex = 2; // Azul Elegante por defecto
+    let paletteIndex = localStorage.getItem('paletteIndex')!==null
+      ? parseInt(localStorage.getItem('paletteIndex'),10)%palettes.length
+      : defaultPaletteIndex;
+
+    
+
+    let periodo = 'mes';
+    let chartTipos, chartDona;
+
+    const el = (id)=> document.getElementById(id);
+    const btnSemana = el('btnSemana');
+    const btnMes = el('btnMes');
+    const periodoTag = el('periodoTag');
+    const btnTheme = el('btnTheme');
+    const btnPalette = el('btnPalette');
+
+    // ---- Theme toggle ----
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('theme');
+    if(savedTheme === 'dark') root.classList.add('dark');
+    btnTheme.textContent = root.classList.contains('dark') ? '☀️' : '🌙';
+    btnTheme.addEventListener('click', ()=>{
+      root.classList.toggle('dark');
+      const isDark = root.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      btnTheme.textContent = isDark ? '☀️' : '🌙';
+      render();
+    });
+
+    // ---- Palette toggle ----
+    btnPalette.addEventListener('click', ()=>{
+      paletteIndex = (paletteIndex + 1) % palettes.length;
+      localStorage.setItem('paletteIndex', String(paletteIndex));
+      render();
+    });
+
+    btnSemana.addEventListener('click', ()=>{ periodo='semana'; toggleBtns(); render(); });
+    btnMes.addEventListener('click', ()=>{ periodo='mes'; toggleBtns(); render(); });
+
+    function toggleBtns(){
+      btnSemana.classList.toggle('bg-slate-900');
+      btnSemana.classList.toggle('text-white');
+      btnSemana.classList.toggle('bg-white/80');
+      btnSemana.classList.toggle('text-slate-700');
+      btnMes.classList.toggle('bg-slate-900');
+      btnMes.classList.toggle('text-white');
+      btnMes.classList.toggle('bg-white/80');
+      btnMes.classList.toggle('text-slate-700');
+      periodoTag.textContent = periodo==='mes' ? 'Mes actual' : 'Últimos 7 días';
+    }
+
+    // --- Data helpers ---
+    function readAll(){
+      const ls = JSON.parse(localStorage.getItem('cotizaciones')||'[]');
+      const base = (ls.length? ls: sample).map(parse);
+      // persiste "aprobado" e "_id" si no existían
+      localStorage.setItem('cotizaciones', JSON.stringify(base.map(({_id,fecha,tipo,ubicacion,monto,moneda,comitente,aprobado})=>({ _id, fecha:fecha.toISOString().slice(0,10), tipo, ubicacion, monto, moneda, comitente, aprobado }))));
+      return base;
+    }
+
+    function getData(){
+      const base = readAll();
+      const now = new Date();
+      if(periodo==='semana'){
+        const seven = new Date(now); seven.setDate(now.getDate()-7);
+        return base.filter(r=> r.fecha >= seven && r.fecha <= now);
+      }
+      return base.filter(r=> r.fecha.getMonth()===now.getMonth() && r.fecha.getFullYear()===now.getFullYear());
+    }
+
+    function toggleApprove(id){
+      const arr = JSON.parse(localStorage.getItem('cotizaciones')||'[]');
+      const i = arr.findIndex(x=> x._id===id);
+      if(i>-1){ arr[i].aprobado = !arr[i].aprobado; localStorage.setItem('cotizaciones', JSON.stringify(arr)); render(); }
+    }
+    function removeItem(id){
+      const arr = JSON.parse(localStorage.getItem('cotizaciones')||'[]');
+      const i = arr.findIndex(x=> x._id===id);
+      if(i>-1){
+        if(confirm('¿Eliminar este presupuesto?')){
+          arr.splice(i,1);
+          localStorage.setItem('cotizaciones', JSON.stringify(arr));
+          render();
+        }
+      }
+    }
+
+    // --- Import/Export helpers ---
+    function parseCSV(text){
+      const lines = text.trim().split(/\r?\n/);
+      const header = lines.shift();
+      const idx = { fecha:0,tipo:1,ubicacion:2,monto:3,moneda:4,comitente:5,aprobado:6 };
+      return lines.map((ln,i)=>{
+        const cells = ln.split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/).map(s=> s.replace(/^"|"$/g,''));
+        return {
+          _id: `${cells[idx.fecha]}|${cells[idx.comitente]}|${cells[idx.tipo]}|${cells[idx.ubicacion]}|${cells[idx.monto]}|${i}`,
+          fecha: cells[idx.fecha],
+          tipo: cells[idx.tipo],
+          ubicacion: cells[idx.ubicacion]||'',
+          monto: Number(cells[idx.monto]||0),
+          moneda: cells[idx.moneda]||'ARS',
+          comitente: cells[idx.comitente]||'',
+          aprobado: String(cells[idx.aprobado]||'false').toLowerCase()==='true'
+        };
+      });
+    }
+    function exportCSV(){
+      const rows = JSON.parse(localStorage.getItem('cotizaciones')||'[]');
+      const header = 'fecha,tipo,ubicacion,monto,moneda,comitente,aprobado';
+      const body = rows.map(r=> [
+        r.fecha, r.tipo, r.ubicacion, r.monto, r.moneda||'ARS', r.comitente||'', r.aprobado?'true':'false'
+      ].join(',')).join('\n');
+      const blob = new Blob([header+'\n'+body], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'cotizaciones_export.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    function importFile(file){
+      const reader = new FileReader();
+      reader.onload = e => {
+        let rows = [];
+        if(file.name.toLowerCase().endsWith('.csv')){
+          rows = parseCSV(e.target.result);
+        } else {
+          rows = JSON.parse(e.target.result);
+          rows = rows.map((r,i)=> ({ _id: r._id || `${r.fecha}|${r.comitente}|${r.tipo}|${r.ubicacion}|${r.monto}|${i}`, ...r }));
+        }
+        localStorage.setItem('cotizaciones', JSON.stringify(rows));
+        render();
+      };
+      reader.readAsText(file);
+    }
+    async function tryLoadDefault(){
+      // si estás sirviendo con Live Server u otro http, intenta cargar el JSON por defecto
+      try{
+        const res = await fetch('./cotizaciones_noviembre_2025.json', { cache:'no-store' });
+        if(res.ok){
+          const rows = await res.json();
+          if(Array.isArray(rows) && rows.length){
+            localStorage.setItem('cotizaciones', JSON.stringify(rows.map((r,i)=> ({ _id: r._id || `${r.fecha}|${r.comitente}|${r.tipo}|${r.ubicacion}|${r.monto}|${i}`, ...r }))));
+          }
+        }
+      }catch(err){ /* ignorar si no existe o si se abre con file:// */ }
+    }
+
+    function render(){
+      const data = getData();
+      const total = data.reduce((a,x)=> a + (x.monto||0), 0);
+      const cant  = data.length;
+      const aprobados = data.filter(x=> x.aprobado);
+      const aprobCnt = aprobados.length;
+      const aprobMonto = aprobados.reduce((a,x)=> a + (x.monto||0), 0);
+      const avg   = cant? Math.round(total/cant): 0;
+      el('kpiTotal').textContent = money(total);
+      el('kpiCant').textContent  = String(cant);
+      el('kpiAvg').textContent   = money(avg);
+      el('kpiAprobMonto').textContent = money(aprobMonto);
+      el('kpiAprobTxt').textContent   = `Aprobados (${aprobCnt})`;
+
+      // Ranking por tipo (por cantidad)
+      const byTipoCount = {};
+      const byTipoMonto = {};
+      const byUbi = {};
+      data.forEach(x=>{
+        const tipo = x.tipo;
+        byTipoCount[tipo] = (byTipoCount[tipo]||0) + 1;
+        byTipoMonto[tipo] = (byTipoMonto[tipo]||0) + (x.monto||0);
+        byUbi[x.ubicacion||'—'] = (byUbi[x.ubicacion||'—']||0) + 1;
+      });
+
+      const tipos = Object.keys(byTipoCount);
+      const cantidades = tipos.map(t=> byTipoCount[t]);
+      const montos = tipos.map(t=> byTipoMonto[t]);
+
+      const palette = palettes[paletteIndex];
+      const barColors = tipos.map((_,i)=> palette[i % palette.length]);
+
+      // Chart barra (cantidad)
+      const ctx1 = el('chartTipos');
+      if(chartTipos) chartTipos.destroy();
+      chartTipos = new Chart(ctx1, {
+        type: 'bar',
+        data: { labels: tipos, datasets: [{ label: 'Cantidad', data: cantidades, backgroundColor: barColors, borderRadius: 10 }] },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { ticks: { precision:0 } } }
+        }
+      });
+
+      // Chart dona (participación por monto)
+      const ctx2 = el('chartDona');
+      if(chartDona) chartDona.destroy();
+      chartDona = new Chart(ctx2, {
+        type: 'doughnut',
+        data: { labels: tipos, datasets: [{ data: montos, backgroundColor: barColors, borderWidth: 1 }]},
+        options: { plugins: { legend: { position: 'bottom' }, tooltip: { callbacks:{ label: (c)=> `${c.label}: ${money(c.raw)}` } } } }
+      });
+
+      // Top ubicaciones (por cantidad)
+      const top = Object.entries(byUbi).sort((a,b)=> b[1]-a[1]).slice(0,5);
+      el('topUbic').innerHTML = top.map(([u,c],i)=>`
+        <li class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full text-xs flex items-center justify-center text-white" style="background:${palette[i%palette.length]}">${i+1}</span>
+            <span>${u}</span>
+          </div>
+          <span class="text-slate-600 dark:text-slate-300">${c} presupuesto${c!==1?'s':''}</span>
+        </li>
+      `).join('') || `<li class="text-slate-500">Sin datos.</li>`;
+
+      // Tabla últimos (con switch de aprobado + quitar)
+      const rows = data
+        .slice()
+        .sort((a,b)=> b.fecha - a.fecha)
+        
+        .map(r=> `
+          <tr class="border-b border-slate-200/60 dark:border-slate-800">
+            <td class="py-2 pr-4">${r.fecha.toLocaleDateString('es-AR')}</td>
+            <td class="py-2 pr-4">${r.comitente||'—'}</td>
+            <td class="py-2 pr-4">${r.tipo}</td>
+            <td class="py-2 pr-4">${r.ubicacion||'—'}</td>
+            <td class="py-2 pr-4 text-right">${money(r.monto||0)}</td>
+            <td class="py-2 pr-2 text-center">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" ${r.aprobado?'checked':''} onchange="(${toggleApprove.toString()})('${r._id}')" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:bg-emerald-500 relative after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5 dark:after:border-slate-600"></div>
+              </label>
+            </td>
+            <td class="py-2 pr-2 text-center">
+              <button title="Quitar presupuesto" onclick="(${removeItem.toString()})('${r._id}')" class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-400 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 dark:text-rose-300">&times;</button>
+            </td>
+          </tr>`)
+        .join('');
+      document.getElementById('tbodyRows').innerHTML = rows || `<tr><td colspan="7" class="py-4 text-slate-500">Aún no hay registros.</td></tr>`;
+    }
+
+    // Boot
+    document.getElementById('btnImport').addEventListener('click', ()=> document.getElementById('fileJSON').click());
+    document.getElementById('fileJSON').addEventListener('change', (e)=> e.target.files[0] && importFile(e.target.files[0]));
+    document.getElementById('btnExport').addEventListener('click', exportCSV);
+
+    tryLoadDefault().then(()=>{ toggleBtns(); render(); });
+  </script>
+</body>
+</html>

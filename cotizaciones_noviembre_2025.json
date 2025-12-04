@@ -1,0 +1,202 @@
+[
+  {
+    "fecha": "2025-11-01",
+    "tipo": "Amojonamiento",
+    "ubicacion": "San José Obrero",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Daniel Arias",
+    "aprobado": false,
+    "_id": "2025-11-01|Daniel Arias|Amojonamiento|San José Obrero|450000"
+  },
+  {
+    "fecha": "2025-11-01",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Griselda Pino Leal",
+    "aprobado": false,
+    "_id": "2025-11-01|Griselda Pino Leal|Amojonamiento||450000"
+  },
+  {
+    "fecha": "2025-11-01",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 500000,
+    "moneda": "ARS",
+    "comitente": "Gabriel Torres",
+    "aprobado": false,
+    "_id": "2025-11-01|Gabriel Torres|Amojonamiento||500000"
+  },
+  {
+    "fecha": "2025-11-06",
+    "tipo": "Mensura de Posesión",
+    "ubicacion": "Bell Ville",
+    "monto": 1200000,
+    "moneda": "ARS",
+    "comitente": "Silvina Isabel",
+    "aprobado": false,
+    "_id": "2025-11-06|Silvina Isabel|Mensura de Posesión|Bell Ville|1200000"
+  },
+  {
+    "fecha": "2025-11-06",
+    "tipo": "Amojonamiento + Subdivisión",
+    "ubicacion": "",
+    "monto": 500000,
+    "moneda": "ARS",
+    "comitente": "Gabriel Torres",
+    "aprobado": false,
+    "_id": "2025-11-06|Gabriel Torres|Amojonamiento + Subdivisión||500000"
+  },
+  {
+    "fecha": "2025-11-06",
+    "tipo": "Mensura de Posesión",
+    "ubicacion": "",
+    "monto": 0,
+    "moneda": "ARS",
+    "comitente": "Martin",
+    "aprobado": false,
+    "_id": "2025-11-06|Martin|Mensura de Posesión||0"
+  },
+  {
+    "fecha": "2025-11-06",
+    "tipo": "Trabajo personalizado",
+    "ubicacion": "",
+    "monto": 0,
+    "moneda": "ARS",
+    "comitente": "Cliente",
+    "aprobado": false,
+    "_id": "2025-11-06|Cliente|Trabajo personalizado||0"
+  },
+  {
+    "fecha": "2025-11-06",
+    "tipo": "Amojonamiento",
+    "ubicacion": "San José Obrero",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Daniel Arias",
+    "aprobado": false,
+    "_id": "2025-11-06|Daniel Arias|Amojonamiento|San José Obrero|450000"
+  },
+  {
+    "fecha": "2025-11-06",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 1000000,
+    "moneda": "ARS",
+    "comitente": "Sergio Muñeco",
+    "aprobado": false,
+    "_id": "2025-11-06|Sergio Muñeco|Amojonamiento||1000000"
+  },
+  {
+    "fecha": "2025-11-11",
+    "tipo": "Mensura",
+    "ubicacion": "San Alberto",
+    "monto": 900000,
+    "moneda": "ARS",
+    "comitente": "Mario Ponce",
+    "aprobado": false,
+    "_id": "2025-11-11|Mario Ponce|Mensura|San Alberto|900000"
+  },
+  {
+    "fecha": "2025-11-11",
+    "tipo": "Mensura de Posesión",
+    "ubicacion": "Santa Rosa",
+    "monto": 1200000,
+    "moneda": "ARS",
+    "comitente": "Fabian",
+    "aprobado": false,
+    "_id": "2025-11-11|Fabian|Mensura de Posesión|Santa Rosa|1200000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Amojonamiento",
+    "ubicacion": "Santa Rosa de Calamuchita",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Emiliano Lanche",
+    "aprobado": false,
+    "_id": "2025-11-12|Emiliano Lanche|Amojonamiento|Santa Rosa de Calamuchita|450000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Mensura de Posesión",
+    "ubicacion": "Salsipuedes",
+    "monto": 600000,
+    "moneda": "ARS",
+    "comitente": "Sol",
+    "aprobado": false,
+    "_id": "2025-11-12|Sol|Mensura de Posesión|Salsipuedes|600000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Mensura de Posesión",
+    "ubicacion": "Cura Brochero",
+    "monto": 600000,
+    "moneda": "ARS",
+    "comitente": "Marcelo",
+    "aprobado": false,
+    "_id": "2025-11-12|Marcelo|Mensura de Posesión|Cura Brochero|600000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Yamila",
+    "aprobado": false,
+    "_id": "2025-11-12|Yamila|Amojonamiento||450000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Yazmín",
+    "aprobado": false,
+    "_id": "2025-11-12|Yazmín|Amojonamiento||450000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Leiva Nahuel",
+    "aprobado": false,
+    "_id": "2025-11-12|Leiva Nahuel|Amojonamiento||450000"
+  },
+  {
+    "fecha": "2025-11-12",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Sergio",
+    "aprobado": false,
+    "_id": "2025-11-12|Sergio|Amojonamiento||450000"
+  },
+  {
+    "fecha": "2025-11-19",
+    "tipo": "Amojonamiento",
+    "ubicacion": "",
+    "monto": 600000,
+    "moneda": "ARS",
+    "comitente": "Martino Birra",
+    "aprobado": false,
+    "_id": "2025-11-19|Martino Birra|Amojonamiento||600000"
+  },
+  {
+    "fecha": "2025-11-19",
+    "tipo": "Relevamiento Topográfico",
+    "ubicacion": "",
+    "monto": 450000,
+    "moneda": "ARS",
+    "comitente": "Fer",
+    "aprobado": false,
+    "_id": "2025-11-19|Fer|Relevamiento Topográfico||450000"
+  }
+]

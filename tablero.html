@@ -8,6 +8,14 @@
     // Tailwind on CDN + dark mode by class
     tailwind = { config: { darkMode: 'class' } };
   </script>
+  /* SUPRABASE */
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://iznmmrtqujgdwwbglyjo.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_A9yWdw0Wv_rTabJcR7X_TA_q_eGI4NV";
+
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
@@ -411,3 +419,4 @@
   </script>
 </body>
 </html>
+

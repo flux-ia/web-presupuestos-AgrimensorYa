@@ -424,21 +424,60 @@ async function descargarPDF() {
 
 
   // ===== Guardar en historial (localStorage)
-  function guardarEnHistorial(){
+  // ===== Guardar en historial (localStorage + Supabase)
+  async function guardarEnHistorial() {
     const tpl = currentTemplate();
     const rec = {
       fecha: st.fecha.value || todayISO(),
       tipo: tpl.name,
       ubicacion: st.ubicacion.value || "",
-      monto: parseFloat(String(st.monto.value).replace(/,/g,".")) || 0,
+      monto: parseFloat(String(st.monto.value).replace(/,/g, ".")) || 0,
       moneda: st.moneda.value || "ARS",
       comitente: st.comitente.value || ""
     };
+
+    // 1) Backup local (como antes)
     const key = "cotizaciones";
     const arr = JSON.parse(localStorage.getItem(key) || "[]");
     arr.push(rec);
     localStorage.setItem(key, JSON.stringify(arr));
-    alert("✅ Cotización guardada en historial (Tablero).");
+
+    // 2) Enviar a Supabase si el cliente existe
+    try {
+      if (window._supabase) {
+        const { error } = await window._supabase
+          .from("COTIZACIONES")
+          .insert([{
+            // OJO: estos nombres tienen que coincidir con las columnas de tu tabla
+            fecha: rec.fecha,
+            tipo: rec.tipo,
+            ubicación: rec.ubicacion || null,
+            monto: rec.monto,
+            moneda: rec.moneda,
+            // tu columna se llama "comité" según la captura
+            "comité": rec.comitente,
+            // opcional: si tenés columna "aprobado"
+            aprobado: false
+          }]);
+
+        if (error) {
+          console.error("Error insertando en Supabase:", error);
+          alert("Se guardó localmente, pero falló al enviar a Supabase.");
+        } else {
+          console.log("Cotización guardada en Supabase");
+          alert("✅ Cotización guardada (local + Supabase).");
+        }
+      } else {
+        console.warn("No existe window._supabase; solo se guardó en localStorage.");
+        alert("Cotización guardada solo en el navegador (sin conexión a Supabase).");
+      }
+    } catch (e) {
+      console.error("Error inesperado con Supabase:", e);
+      alert("Se guardó localmente, pero hubo un error con Supabase.");
+    }
   }
 }
+
+}
+
 

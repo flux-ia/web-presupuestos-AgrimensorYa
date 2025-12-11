@@ -15,9 +15,13 @@
  <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // Tu URL de proyecto (Correcta)
   const SUPABASE_URL = "https://iznmmrtqujgdwwbglyjo.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_A9yWdw0Wv_rTabJcR7X_TA_q_eGI4NV"; // exactamente como te lo da Supabase
 
+  // TU CLAVE 'ANON' (La primera que pegaste):
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6bm1ucnRxdWpnZHd3YmdseWpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NTEzMjksImV4cCI6MjA4MDQyNzMyOX0.tiebM-ygg8_jA_7Om5ZRFAz-gZlE9zJToBsoesbTZL4";
+
+  // Inicializamos el cliente
   const { createClient } = window.supabase;
   window._supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
@@ -254,6 +258,7 @@ Los honorarios no incluyen tasas/tributos municipales, provinciales o nacionales
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 

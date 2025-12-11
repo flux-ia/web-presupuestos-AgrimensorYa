@@ -451,11 +451,11 @@ async function descargarPDF() {
             // OJO: estos nombres tienen que coincidir con las columnas de tu tabla
             fecha: rec.fecha,
             tipo: rec.tipo,
-            ubicación: rec.ubicacion || null,
+            ubicacion: rec.ubicacion || null,
             monto: rec.monto,
             moneda: rec.moneda,
             // tu columna se llama "comité" según la captura
-            "comité": rec.comitente,
+            comitente: rec.comitente,
             // opcional: si tenés columna "aprobado"
             aprobado: false
           }]);
@@ -477,6 +477,7 @@ async function descargarPDF() {
     }
   }
 }
+
 
 
 

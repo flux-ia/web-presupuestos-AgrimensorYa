@@ -11,21 +11,19 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js" defer></script>
- <!-- Supabase -->
- <!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Tu URL de proyecto (Correcta)
+  // 1. URL de tu proyecto
   const SUPABASE_URL = "https://iznmmrtqujgdwwbglyjo.supabase.co";
 
-  // TU CLAVE 'ANON' (La primera que pegaste):
+  // 2. LA CLAVE CORRECTA (Legacy/Anon - empieza con eyJ...)
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6bm1ucnRxdWpnZHd3YmdseWpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NTEzMjksImV4cCI6MjA4MDQyNzMyOX0.tiebM-ygg8_jA_7Om5ZRFAz-gZlE9zJToBsoesbTZL4";
 
-  // Inicializamos el cliente
+  // 3. Iniciar conexión
   const { createClient } = window.supabase;
   window._supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
-
 
   <style>
     /* A4 ~96dpi */
@@ -258,6 +256,7 @@ Los honorarios no incluyen tasas/tributos municipales, provinciales o nacionales
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 

@@ -12,15 +12,16 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js" defer></script>
  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://iznmmrtqujgdwwbglyjo.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_A9yWdw0Wv_rTabJcR7X_TA_q_eGI4NV";
+  const SUPABASE_ANON_KEY = "sb_publishable_A9yWdw0Wv_rTabJcR7X_TA_q_eGI4NV"; // exactamente como te lo da Supabase
 
   const { createClient } = window.supabase;
   window._supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
+
 
   <style>
     /* A4 ~96dpi */
@@ -253,6 +254,7 @@ Los honorarios no incluyen tasas/tributos municipales, provinciales o nacionales
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 

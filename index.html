@@ -13,18 +13,14 @@
 <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js" defer></script>
  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://iznmmrtqujgdwwbglyjo.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_A9yWdw0Wv_rTabJcR7X_TA_q_eGI4NV";
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://iznmmrtqujgdwwbglyjo.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_A9yWdw0Wv_rTabJcR7X_TA_q_eGI4NV";
 
-    // OJO: usamos window.supabase para no pisar el objeto global
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
-    // Más adelante, en app.js, vamos a usar supabaseClient
-    window.supabaseClient = supabaseClient; // opcional, para poder usarlo desde otros scripts
-  </script>
+  const { createClient } = window.supabase;
+  window._supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 
   <style>
     /* A4 ~96dpi */
@@ -257,5 +253,6 @@ Los honorarios no incluyen tasas/tributos municipales, provinciales o nacionales
   <script src="app.js"></script>
 </body>
 </html>
+
 
 

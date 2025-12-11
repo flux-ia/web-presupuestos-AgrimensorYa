@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es" class="dark:[color-scheme:dark]">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Acceso Restringido</title>
+  <script>tailwind = { config: { darkMode: 'class' } };</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{ --brandA: 245, 158, 11; --brandB: 59, 130, 246; }
+    body{
+      background:
+        radial-gradient(900px 400px at 10% -5%, rgba(var(--brandB), .12), transparent 50%),
+        radial-gradient(900px 400px at 90% 105%, rgba(var(--brandA), .12), transparent 50%),
+        linear-gradient(180deg, #fff7ed 0%, #eff6ff 50%, #f0fdf4 100%);
+    }
+    .dark body{
+      background:
+        radial-gradient(900px 400px at 10% -5%, rgba(var(--brandB), .12), transparent 50%),
+        radial-gradient(900px 400px at 90% 105%, rgba(var(--brandA), .12), transparent 50%),
+        linear-gradient(180deg, #0b1220 0%, #0b1220 50%, #0b1220 100%);
+    }
+    .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,.6); }
+    .dark .glass { background: rgba(2,6,23,.5); }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-slate-800 dark:text-slate-100 p-4">
+
+  <div class="w-full max-w-sm glass rounded-2xl border border-white/50 dark:border-slate-700 shadow-xl p-8 transform transition-all">
+    <div class="text-center mb-8">
+      <div class="h-12 w-12 mx-auto rounded-xl flex items-center justify-center text-white font-bold shadow-lg text-xl mb-4" 
+           style="background:conic-gradient(from 160deg, #2563eb, #0ea5e9, #14b8a6, #94a3b8, #2563eb)">
+        AY
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight">Bienvenido</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Ingresa tus credenciales para continuar</p>
+    </div>
+
+    <form id="loginForm" class="space-y-5">
+      <div>
+        <label class="block text-xs font-bold uppercase text-slate-500 mb-1 ml-1">Usuario</label>
+        <input type="text" id="user" class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50 p-3 outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Usuario" required>
+      </div>
+      
+      <div>
+        <label class="block text-xs font-bold uppercase text-slate-500 mb-1 ml-1">Contraseña</label>
+        <input type="password" id="pass" class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50 p-3 outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="••••••" required>
+      </div>
+
+      <div id="errorMsg" class="hidden text-rose-500 text-sm text-center font-medium bg-rose-50 dark:bg-rose-900/20 py-2 rounded-lg">
+        Credenciales incorrectas
+      </div>
+
+      <button type="submit" class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold shadow-lg hover:scale-[1.02] transition-transform">
+        Ingresar
+      </button>
+    </form>
+    
+    <div class="mt-6 text-center">
+       <button id="themeBtn" class="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline">Cambiar tema 🌗</button>
+    </div>
+  </div>
+
+  <script>
+    // --- LÓGICA DE LOGIN ---
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('user').value.trim();
+      const p = document.getElementById('pass').value.trim();
+
+      // USUARIO Y CONTRASEÑA
+      if (u === 'agrimensor' && p === 'jorge') {
+        // Guardamos la sesión
+        sessionStorage.setItem('isLoggedIn', 'true');
+        // Redirigir al Tablero o al Index
+        window.location.href = 'tablero.html'; 
+      } else {
+        errorMsg.classList.remove('hidden');
+        // Temblor visual en error
+        document.querySelector('.glass').classList.add('animate-pulse');
+        setTimeout(() => document.querySelector('.glass').classList.remove('animate-pulse'), 500);
+      }
+    });
+
+    // Tema
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

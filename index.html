@@ -4,7 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generador de Presupuestos — Agrimensura</title>
-
+<script>
+  // GUARDIA DE SEGURIDAD 🛡️
+  // Si no hay sesión iniciada, mandar al login
+  if (!sessionStorage.getItem('isLoggedIn')) {
+    window.location.href = 'login.html';
+  }
+</script>
   <!-- Tailwind -->
    <script src="https://cdn.tailwindcss.com"></script>
  <!-- libs (mismas que la web vieja) -->
@@ -256,6 +262,7 @@ Los honorarios no incluyen tasas/tributos municipales, provinciales o nacionales
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
